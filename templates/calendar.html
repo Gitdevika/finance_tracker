@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker - Calendar</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            background-color: #f4f4f9;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+        }
+
+        .left-half {
+            width: 50%;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .right-half {
+            width: 50%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #f4f4f9;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-gap: 10px;
+            margin-top: 20px;
+        }
+
+        .calendar div {
+            background-color: #e4e4e4;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s ease;
+        }
+
+        .calendar div:hover {
+            background-color: #d1d1d1;
+        }
+
+        .calendar div a {
+            text-decoration: none;
+            color: black;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 80%;
+        }
+
+        .buttons button {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            font-size: 18px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        .buttons button:hover {
+            background-color: #218838;
+        }
+
+        .buttons a {
+            text-decoration: none;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left half with the calendar -->
+        <div class="left-half">
+            <h2>{{ month_name }} Calendar</h2>
+            <div class="calendar">
+                <!-- Dynamically generating the number of days in the current month -->
+                {% for day in range(1, num_days + 1) %}
+                <div><a href="/add_expense/{{ day }}">{{ day }}</a></div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Right half with buttons -->
+        <div class="right-half">
+            <div class="buttons">
+                <button><a href="/show_pie_chart">Show Analytics</a></button>
+
+                <button><a href="/set_budget">Set Budget</a></button>
+                <button><a href="/get_insights">Get Insights</a></button>
+                <button><a href="/change_income">Change Income</a></button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

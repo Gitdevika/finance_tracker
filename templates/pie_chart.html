@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense and Income Pie Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div>
+        <canvas id="expensePieChart"></canvas>
+    </div>
+
+    <script>
+        // Get data from Flask (passed from the route)
+        const categories = JSON.parse('{{ categories | tojson | safe }}');
+        const amounts = JSON.parse('{{ amounts | tojson | safe }}');
+        const totalIncome = {{ total_income | safe }};
+        const totalExpenses = {{ total_expenses | safe }};
+
+        // Calculate remaining income after expenses
+        const remainingIncome = totalIncome - totalExpenses;
+
+        // Add remaining income as the first "category" and then the expenses
+        categories.unshift('Remaining Income');
+        amounts.unshift(remainingIncome);
+
+        // Create pie chart using Chart.js
+        const ctx = document.getElementById('expensePieChart').getContext('2d');
+        const expensePieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: categories,
+                datasets: [{
+                    data: amounts,
+                    backgroundColor: [
+                        'rgba(255, 206, 86, 0.2)', // Color for remaining income
+                        'rgba(255, 99, 132, 0.2)', // Color for first expense category
+                        'rgba(54, 162, 235, 0.2)', // Color for second expense category
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '50%',
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    }
+                }
+            }
+        });
+    </script>
+
+    <div>
+        <h2>Spending Insights</h2>
+        <p><strong>Highest Spending Category:</strong> {{ highest_expense_category }} - ${{ highest_expense_amount }}</p>
+        <p><strong>Total Income:</strong> ${{ total_income }}</p>
+        <p><strong>Total Expenses:</strong> ${{ total_expenses }}</p>
+        <p><strong>Budget Status:</strong> {{ budget_status }}</p>
+        <p><strong>Savings Rate:</strong> {{ savings_rate | round(2) }}%</p>
+        <p><strong>Budget Utilization:</strong> {{ budget_utilization | round(2) }}%</p>
+
+        <h3>Monthly Spending Trends</h3>
+        <ul>
+            {% for month, amount in monthly_trends.items() %}
+                <li>Month {{ month }}: ${{ amount }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
